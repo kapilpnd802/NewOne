@@ -1,0 +1,116 @@
+<!-- Paste inside <body> -->
+<style>
+  /* Light / premium styles */
+  .clickable-heading {
+    display: inline-block;
+    background: linear-gradient(180deg, #ffffff 0%, #f7f9fb 100%);
+    color: #2b2f33;
+    padding: 10px 18px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(32, 45, 60, 0.08);
+    font-family: "Segoe UI", Roboto, -apple-system, "Helvetica Neue", Arial;
+    font-size: 1.25rem;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+    border: 1px solid rgba(43,47,51,0.06);
+  }
+  .clickable-heading:active { transform: translateY(1px); box-shadow: 0 4px 12px rgba(32,45,60,0.06); }
+
+  /* Modal overlay + content */
+  .modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(16, 24, 32, 0.4); /* subtle dim */
+    padding: 32px;
+    z-index: 9999;
+  }
+  .modal.show { display: flex; }
+
+  .modal-content {
+    background: linear-gradient(180deg, #ffffff, #fbfdff);
+    color: #1f2933;
+    width: 100%;
+    max-width: 480px;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: 0 20px 40px rgba(17, 24, 39, 0.12);
+    border: 1px solid rgba(32,45,60,0.05);
+  }
+
+  .modal-close {
+    float: right;
+    background: transparent;
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+    color: #6b7280;
+  }
+
+  .modal h2 {
+    margin: 6px 0 8px;
+    font-size: 1.125rem;
+  }
+  .modal p { margin: 0 0 8px; color: #374151; line-height: 1.4; }
+</style>
+
+<!-- Clickable heading -->
+<h1 id="author-heading" class="clickable-heading" tabindex="0" role="button" aria-pressed="false">
+  By KapilPndit
+</h1>
+
+<!-- Modal -->
+<div id="author-modal" class="modal" aria-hidden="true">
+  <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <button class="modal-close" aria-label="Close popup">×</button>
+    <h2 id="modal-title">By KapilPndit</h2>
+    <p>Welcome — this is a premium interface styled with a light color theme.</p>
+    <p style="font-size:0.95rem; color:#6b7280; margin-top:12px;">
+      Click outside, press Esc, or the × to close.
+    </p>
+  </div>
+</div>
+
+<script>
+  (function(){
+    const heading = document.getElementById('author-heading');
+    const modal = document.getElementById('author-modal');
+    const closeBtn = modal.querySelector('.modal-close');
+
+    function openModal() {
+      modal.classList.add('show');
+      modal.setAttribute('aria-hidden', 'false');
+      heading.setAttribute('aria-pressed', 'true');
+      // prevent page scroll while modal open
+      document.documentElement.style.overflow = 'hidden';
+      // focus first focusable element in modal for accessibility
+      closeBtn.focus();
+    }
+
+    function closeModal() {
+      modal.classList.remove('show');
+      modal.setAttribute('aria-hidden', 'true');
+      heading.setAttribute('aria-pressed', 'false');
+      document.documentElement.style.overflow = '';
+      heading.focus();
+    }
+
+    heading.addEventListener('click', openModal);
+    heading.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(); }
+    });
+
+    closeBtn.addEventListener('click', closeModal);
+
+    // Close when clicking the overlay (but not when clicking modal content)
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+    // Close on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('show')) closeModal();
+    });
+  })();
+</script>
